@@ -35,7 +35,7 @@ func FindRoute(buf []byte) *Route {
 }
 
 func IsHttpRequest(buf []byte) bool {
-	b,_:=regexp.MatchString(`GET /.*`,string(buf))
+	b,_:=regexp.MatchString(`((GET)|(POST)) /.*`,string(buf))
 	return b
 }
 
