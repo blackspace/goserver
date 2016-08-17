@@ -36,13 +36,13 @@ func doWork(conn net.Conn)() {
 
 			buf = append(buf, c)
 
-			r :=action.FindRoute(buf)
+			a :=action.FindAction(buf)
 
-			if r!=nil {
-				if r.ActionFunc(cc,buf) {
-					break L
-				} else {
+			if a !=nil {
+				if a(cc,buf) {
 					break M
+				} else {
+					break L
 				}
 			} else {
 				continue
@@ -50,7 +50,7 @@ func doWork(conn net.Conn)() {
 
 		}
 	}
-	log.Println("A goroute exited")
+	log.Println("A goroutine has finished")
 }
 
 
