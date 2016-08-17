@@ -9,14 +9,9 @@ import (
 
 
 
-func Command(cc *context.ClientContext , buf []byte)  bool {
+func DoCommand(cc *context.ClientContext , buf []byte)  bool {
 	buf = buf[0:len(buf) - 2]
 	line := string(buf)
-
-	if len(line) == 0 {
-		client.ClientConnectPrintPrompt(cc)
-		return false
-	}
 
 	log.Println(`Get a line from client:`, line)
 
@@ -37,5 +32,5 @@ func Command(cc *context.ClientContext , buf []byte)  bool {
 
 	}
 
-	return false
+	return true
 }

@@ -7,27 +7,30 @@ import (
 	"strings"
 )
 
-type  Route struct {
-	PatternFunc func([]byte)  bool
-	ActionFunc func(cc * context.ClientContext,buf []byte) bool
+type ActionFun func(cc * context.ClientContext,buf []byte) (need_keep_link bool)
+type PredicateFun func([]byte)  bool
+
+type  Action struct {
+	MatchPatternFun PredicateFun
+	DoActionFun     ActionFun
 }
 
-var Routes = []Route{
+var Actions = []Action{
 	{func(buf []byte) bool { return IsLine(buf) && IsHttpRequest(buf) },DoHttpMethod},
 
 
-	{func(buf []byte) bool { return IsLine(buf) && IsCommand(buf) },Command},
-	{func(buf []byte) bool { return IsLine(buf) && IsUrl(buf)},GetUrl},
+	{func(buf []byte) bool { return IsLine(buf) && IsCommand(buf) }, DoCommand},
+	{func(buf []byte) bool { return IsLine(buf) && IsUrl(buf)}, DoGetUrl},
 	{func(buf []byte) bool { return IsLine(buf) && IsEmptyLine(buf)},DoEmptyLine},
 	{func(buf []byte) bool { return IsLine(buf) },DoInvalidLine},
 
-	{func(buf []byte) bool { return IsSocksV4Instruction(buf)},SocksV4},
+	{func(buf []byte) bool { return IsSocksV4Instruction(buf)}, DoSocksV4},
 }
 
-func FindRoute(buf []byte) *Route {
-	for  _,r:=range Routes {
-		if r.PatternFunc(buf) {
-			return &r
+func FindAction(buf []byte) ActionFun {
+	for  _,r:=range Actions {
+		if r.MatchPatternFun(buf) {
+			return r.DoActionFun
 		}
 	}
 
@@ -35,7 +38,7 @@ func FindRoute(buf []byte) *Route {
 }
 
 func IsHttpRequest(buf []byte) bool {
-	b,_:=regexp.MatchString(`((GET)|(POST)) /.*`,string(buf))
+	b,_:=regexp.MatchString(`((GET)|(POST))`,string(buf))
 	return b
 }
 

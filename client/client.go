@@ -2,16 +2,13 @@ package client
 
 import (
 	"goserver/context"
-	"errors"
 )
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-var ConnectClosed = errors.New("This connect has been closed.")
 func CloseClientConnect(c *context.ClientContext){
-	c.Connect.Close()
+	c.CloseConnect()
 	c.IsClosed =true
 }
 
@@ -37,13 +34,13 @@ func ClientConnectWriteLine(c *context.ClientContext,s string) {
 }
 
 func ClientConnectWrite(c *context.ClientContext,b []byte) (int,error){
-	n,err := c.Connect.Write(b)
+	n,err := c.Writer.Write(b)
 	c.Writer.Flush()
 	return n,err
 }
 
 func ClientConnectRead(c *context.ClientContext,b []byte)(int,error){
-	return c.Connect.Read(b)
+	return c.Reader.Read(b)
 }
 
 func ClientReadByte(c *context.ClientContext) (byte,error) {

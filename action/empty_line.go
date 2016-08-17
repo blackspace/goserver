@@ -5,6 +5,6 @@ import (
 )
 
 func DoEmptyLine(cc *context.ClientContext , buf []byte)  bool {
-	return false
+	return true
 }
 

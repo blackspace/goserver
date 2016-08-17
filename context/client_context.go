@@ -8,7 +8,7 @@ import (
 )
 
 type ClientContext struct {
-	Connect         net.Conn
+	connect         net.Conn
 	Reader          * bufio.Reader
 	Writer          * bufio.Writer
 	Id              int64
@@ -19,8 +19,6 @@ type ClientContext struct {
 	IsCharacterMode bool
 }
 
-
-
 var LastId int64=0
 
 func GetNewId() int64 {
@@ -28,15 +26,19 @@ func GetNewId() int64 {
 }
 
 func NewClientContext() (*ClientContext) {
-	return &ClientContext{Id:GetNewId() }
+	return &ClientContext{Id:GetNewId()}
 }
 
 func (c *ClientContext)SetConn(conn net.Conn) {
-	c.Connect =conn
-	c.Reader=bufio.NewReader(c.Connect)
-	c.Writer=bufio.NewWriter(c.Connect)
+	c.connect =conn
+	c.Reader=bufio.NewReader(c.connect)
+	c.Writer=bufio.NewWriter(c.connect)
 }
 
+
+func (c *ClientContext)CloseConnect() {
+	c.connect.Close()
+}
 
 
 

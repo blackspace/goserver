@@ -8,7 +8,7 @@ import (
 )
 
 
-func SocksV4(cc *context.ClientContext , buf []byte)  bool {
+func DoSocksV4(cc *context.ClientContext , buf []byte)  bool {
 	port := buf[2:4]
 	ip := buf[4:8]
 
@@ -25,7 +25,7 @@ func SocksV4(cc *context.ClientContext , buf []byte)  bool {
 		for {
 			rbuf := make([]byte, 1024)
 
-			n, err := cc.Connect.Read(rbuf)
+			n, err := client.ClientConnectRead(cc,rbuf)
 
 			if err != nil {
 				break
@@ -45,7 +45,7 @@ func SocksV4(cc *context.ClientContext , buf []byte)  bool {
 				break
 			}
 
-			cc.Connect.Write(rbuf[:n])
+			client.ClientConnectWrite(cc,rbuf[:n])
 
 		}
 		client.CloseClientConnect(cc)
@@ -54,5 +54,5 @@ func SocksV4(cc *context.ClientContext , buf []byte)  bool {
 	}()
 
 	wg.Wait()
-	return true
+	return false
 }

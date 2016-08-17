@@ -8,7 +8,7 @@ import (
 	"io/ioutil"
 )
 
-func GetUrl(cc *context.ClientContext , buf []byte)  bool {
+func DoGetUrl(cc *context.ClientContext , buf []byte)  bool {
 	buf = buf[:len(buf)-2]
 	res,err:=http.Get(string(buf))
 
@@ -25,5 +25,5 @@ func GetUrl(cc *context.ClientContext , buf []byte)  bool {
 	}
 
 	client.ClientConnectWriteLine(cc,string(robots))
-	return false
+	return true
 }
