@@ -2,7 +2,6 @@ package command
 
 import (
 	"goserver/context"
-	"goserver/client"
 )
 
 const Prompt="\033[40;32mgochat-server>\033[0m"
@@ -17,16 +16,5 @@ func init() {
 		c.NeedPrompt=false
 		c.Prompt=""
 		return ""
-	},""))
-	_AddCommand(_NewCommand("character_mode",func (c *context.ClientContext,args ...string) string {
-		c.IsCharacterMode=true
-		a :=  []byte{0xff,0xfd,0x18}
-		client.ClientConnectWrite(c,a)
-		return ""
-
-	},""))
-	_AddCommand(_NewCommand("line_mode",func (c *context.ClientContext,args ...string) string {
-		c.IsCharacterMode=true
-		return "\xff\xfd\x18"
 	},""))
 }

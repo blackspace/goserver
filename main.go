@@ -20,39 +20,50 @@ func doWork(conn net.Conn)() {
 
 	buf := make([]byte, 0, 10240)
 
-	L:
+	S:
 	for {
 		buf = buf[0:0]
 
-		M:
+		T:
 		for {
 			c, err := client.ClientReadByte(cc)
 
-
 			if err != nil {
 				log.Println(err)
-				break L
+				break S
 			}
 
 			buf = append(buf, c)
 
-			a :=action.FindAction(buf)
-
-			if a !=nil {
-				if a(cc,buf) {
-					break M
-				} else {
-					break L
+			if action.IsFlag(buf) {
+				fa :=action.FindActionForFlag(buf)
+				if fa !=nil {
+					if fa(cc,buf) {
+						break T
+					} else {
+						break S
+					}
 				}
-			} else {
-				continue
 			}
 
+			if action.IsLine(buf) {
+				line := string(buf[:len(buf) - 2])
+				la := action.FindActionForLine(line)
+				if la != nil {
+					if la(cc, line) {
+						break T
+					} else {
+						break S
+					}
+				} else {
+					client.ClientConnectSendResult(cc, "The line is invalid line\r\n")
+					break T
+				}
+			}
 		}
 	}
 	log.Println("A goroutine has finished")
 }
-
 
 func init() {
 	server.ServerBeginListen()

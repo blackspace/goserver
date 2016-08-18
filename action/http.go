@@ -13,9 +13,7 @@ type pattern struct {
 	
 }
 
-func DoHttpMethod(cc * context.ClientContext,buf []byte) bool {
-	start := buf[:len(buf)-2]
-
+func DoHttpMethod(cc * context.ClientContext,start string) bool {
 	method :=strings.Split(string(start)," ")[0]
 	url :=strings.Split(string(start)," ")[1]
 	ver :=strings.Split(string(start)," ")[2]

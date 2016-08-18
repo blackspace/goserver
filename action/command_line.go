@@ -9,10 +9,7 @@ import (
 
 
 
-func DoCommand(cc *context.ClientContext , buf []byte)  bool {
-	buf = buf[0:len(buf) - 2]
-	line := string(buf)
-
+func DoCommand(cc *context.ClientContext , line string)  bool {
 	log.Println(`Get a line from client:`, line)
 
 	result := command.ExecString(cc, line)
@@ -23,7 +20,7 @@ func DoCommand(cc *context.ClientContext , buf []byte)  bool {
 	//Can't write the connect and must break the for loop
 	if !cc.IsClosed {
 		if len(result) > 0 {
-			client.ClientConnectSendResult(cc, result + "\n")
+			client.ClientConnectSendResult(cc, result + "\r\n")
 		}
 
 		if cc.NeedPrompt {

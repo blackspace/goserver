@@ -8,9 +8,8 @@ import (
 	"io/ioutil"
 )
 
-func DoGetUrl(cc *context.ClientContext , buf []byte)  bool {
-	buf = buf[:len(buf)-2]
-	res,err:=http.Get(string(buf))
+func DoGetUrl(cc *context.ClientContext , url string)  bool {
+	res,err:=http.Get(string(url))
 
 	if err !=nil {
 		log.Fatal(err)
