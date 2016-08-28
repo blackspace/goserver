@@ -16,7 +16,6 @@ type ClientContext struct {
 	NeedPrompt      bool
 	Prompt          string
 	UserName        string
-	IsCharacterMode bool
 }
 
 var LastId int64=0

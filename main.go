@@ -36,9 +36,9 @@ func doWork(conn net.Conn)() {
 			buf = append(buf, c)
 
 			if action.IsFlag(buf) {
-				fa :=action.FindActionForFlag(buf)
-				if fa !=nil {
-					if fa(cc,buf) {
+				fa := action.FindActionForFlag(buf)
+				if fa != nil {
+					if fa(cc, buf) {
 						break T
 					} else {
 						break S
@@ -60,6 +60,9 @@ func doWork(conn net.Conn)() {
 					break T
 				}
 			}
+
+
+
 		}
 	}
 	log.Println("A goroutine has finished")
