@@ -18,7 +18,15 @@ func (h Header)GetField(n string) (Field,bool) {
 	return  Field{},false
 }
 
-func ParseHeaderFromString(s string) (result Header) {
+func (h Header)ToString() (result string){
+	for _,f := range h {
+		result+=f.Name+": "+f.Value+"\r\n"
+	}
+
+	return
+}
+
+func _ParseHeaderFromString(s string) (result Header) {
 	scanner:=bufio.NewScanner(strings.NewReader(s))
 
 	for scanner.Scan()  {

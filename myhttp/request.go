@@ -52,7 +52,7 @@ func (r * Request)ExtractHeaderFromStream(reader * bufio.Reader) {
 		}
 	}
 
-	r.Header = ParseHeaderFromString(string(header[:len(header)-2]))
+	r.Header = _ParseHeaderFromString(string(header[:len(header)-2]))
 }
 
 func (r *  Request)ExtractBodyFromStream(reader * bufio.Reader)  {
@@ -62,19 +62,18 @@ func (r *  Request)ExtractBodyFromStream(reader * bufio.Reader)  {
 
 		switch mt {
 		case "multipart/form-data":
-			r.ParseMultiPartBodyFromStream(reader)
+			r._ParseMultiPartBodyFromStream(reader)
 		case "application/x-www-form-urlencoded":
 			l,_ := strconv.Atoi(cl.Value)
 			buf :=make([]byte,l)
 			n,_ :=   reader.Read(buf)
-			r.ParseQueryBody(string(buf[:n]))
+			r._ParseQueryBody(string(buf[:n]))
 		}
 	}
-
 }
 
 
-func (r *  Request)ParseMultiPartBodyFromStream(reader * bufio.Reader)  {
+func (r *  Request)_ParseMultiPartBodyFromStream(reader * bufio.Reader)  {
 
 	ct,_:=r.Header.GetField("Content-Type")
 
@@ -89,7 +88,7 @@ func (r *  Request)ParseMultiPartBodyFromStream(reader * bufio.Reader)  {
 		l,_,_ :=reader.ReadLine()
 
 		if string(l)==boundary {
-			r.ParseBodyPartFromStream(reader)
+			r._ParseBodyPartFromStream(reader)
 		}
 
 		if string(l)==last_boundary {
@@ -98,7 +97,7 @@ func (r *  Request)ParseMultiPartBodyFromStream(reader * bufio.Reader)  {
 	}
 }
 
-func (r * Request)ParseBodyPartFromStream(reader * bufio.Reader) {
+func (r * Request)_ParseBodyPartFromStream(reader * bufio.Reader) {
 	mbp := MultiBodyPart{}
 
 	for {
@@ -139,7 +138,7 @@ func (r * Request)ParseBodyPartFromStream(reader * bufio.Reader) {
 }
 
 
-func (r *  Request)ParseQueryBody(s string)  {
+func (r *  Request)_ParseQueryBody(s string)  {
 	 m,_ := url.ParseQuery(s)
 
 	var result []Field

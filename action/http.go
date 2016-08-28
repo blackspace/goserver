@@ -2,9 +2,8 @@ package action
 
 import (
 	"goserver/context"
-	"goserver/client"
-	"goserver/action/myhttp"
-	"log"
+	"goserver/myhttp"
+	"bufio"
 )
 
 
@@ -18,9 +17,27 @@ func DoHttpMethod(cc * context.ClientContext, start_line string) bool {
 		request.ExtractBodyFromStream(cc.Reader)
 	}
 
-	log.Println(request)
-
-	client.ClientConnectWriteLine(cc,"hello http")
+	DoRequest(cc.Writer,request)
 
 	return false
+}
+
+func DoRequest(w * bufio.Writer,r * myhttp.Request) {
+	if h,ok :=myhttp.FindHander(r.Url);ok {
+		h.HandlerFun(w,r)
+	} else {
+		response := myhttp.Response{StatusLine:myhttp.StatusLine{"HTTP/1.1","404","Not Found"}}
+		w.WriteString(response.ToString())
+		w.Flush()
+	}
+
+
+}
+
+func init() {
+	myhttp.AddHandler("/",func(w * bufio.Writer,r *myhttp.Request)  {
+		w.WriteString(`hello world`)
+		w.Flush()
+	})
+
 }
