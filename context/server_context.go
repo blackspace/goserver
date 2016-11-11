@@ -9,14 +9,14 @@ import (
 )
 
 type ServerContext struct {
-	_clients  [](*ClientContext)
-	_listener net.Listener
-	_mutex    sync.Mutex
+	_client_contexts [](*ClientContext)
+	_listener        net.Listener
+	_mutex           sync.Mutex
 }
 
 
 func NewServerContext() *ServerContext{
-	return &ServerContext{_clients:make([](*ClientContext),0,1000)}
+	return &ServerContext{_client_contexts:make([](*ClientContext),0,1000)}
 }
 
 func (s *ServerContext)SetListener(l net.Listener) {
@@ -30,7 +30,7 @@ func (s *ServerContext)GetListener() net.Listener{
 
 func (s *ServerContext)OnlineClient()  []*ClientContext {
 	result :=make( []*ClientContext,0,1024)
-	for _,c :=range s._clients {
+	for _,c :=range s._client_contexts {
 		if c!=nil&&c.IsClosed==false {
 			result=append(result,c)
 		}
@@ -39,7 +39,7 @@ func (s *ServerContext)OnlineClient()  []*ClientContext {
 }
 
 func (s *ServerContext)FindClientById(id int64) *ClientContext {
-	for _,c :=range s._clients {
+	for _,c :=range s._client_contexts {
 		if c.Id==id {
 			return c
 		}
@@ -48,7 +48,7 @@ func (s *ServerContext)FindClientById(id int64) *ClientContext {
 }
 
 func (s *ServerContext)FindClientByName(n string) *ClientContext {
-	for _,c := range s._clients {
+	for _,c := range s._client_contexts {
 		if c.UserName==n {
 			return c
 		}
@@ -64,7 +64,7 @@ func  (s *ServerContext)ClientCount() int {
 
 	var count=0
 
-	for _,c := range s._clients {
+	for _,c := range s._client_contexts {
 		if c!=nil {
 			count++
 		}
@@ -82,17 +82,17 @@ func (s *ServerContext)AddClientContext(c * ClientContext) {
 
 	s._mutex.Lock()
 
-	for i,lc :=range s._clients {
+	for i,lc :=range s._client_contexts {
 		if lc==nil {
 			log.Println("Reuse the recoveried client context",i)
-			s._clients[i]=c
+			s._client_contexts[i]=c
 			return
 		}
 	}
 
 	log.Println("Add a new client Context:",c)
 
-	s._clients =append(s._clients,c)
+	s._client_contexts =append(s._client_contexts,c)
 
 }
 
@@ -102,10 +102,10 @@ func (s *ServerContext)ClearClosedClient() {
 			s._mutex.Lock()
 			defer s._mutex.Unlock()
 
-			for i,c:=range s._clients {
+			for i,c:=range s._client_contexts {
 				if c!=nil&&c.IsClosed {
 					log.Println(`Find a closed connect to clear:`,c)
-					s._clients[i]=nil
+					s._client_contexts[i]=nil
 				}
 			}
 		}()

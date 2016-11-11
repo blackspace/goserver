@@ -21,10 +21,9 @@ func (s *Server)_DoWork(conn net.Conn)() {
 	s.AddClientContext(cc)
 
 	client:= client.NewClient(cc)
-
 	defer client.CloseConnect()
 
-	buf := make([]byte, 0, 10240)
+	buf := make([]byte, 0, 1<<10)
 
 	S:
 	for {
@@ -71,7 +70,6 @@ func (s *Server)_DoWork(conn net.Conn)() {
 
 		}
 	}
-	log.Println("A goroutine has finished")
 }
 
 
