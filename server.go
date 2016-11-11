@@ -16,7 +16,6 @@ func NewServer() *Server{
 	return &Server{ServerContext:context.NewServerContext()}
 }
 
-
 func (s *Server)_DoWork(conn net.Conn)() {
 	cc := context.NewClientContext(s.ServerContext,conn)
 
