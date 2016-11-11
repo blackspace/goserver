@@ -9,15 +9,15 @@ import (
 )
 
 func init() {
-	RegistCommand(NewCommand("now",func (cln *client.Client,args ...string) string{
+	RegistCommand(NewCommand("now",func (clnt *client.Client,args ...string) string{
 		return time.Now().String()
 	},""))
-	RegistCommand(NewCommand("client_count",func (cln *client.Client,args ...string) string {
-		return strconv.Itoa(cln.ServerContext.ClientCount())
+	RegistCommand(NewCommand("client_count",func (clnt *client.Client,args ...string) string {
+		return strconv.Itoa(clnt.ServerContext.ClientCount())
 	},""))
-	RegistCommand(NewCommand("who_online", func (cln *client.Client,args ...string) string {
-		for _,cl:=range cln.ServerContext.OnlineClient() {
-			cln.WriteLine(fmt.Sprint(cl.Id)+" "+cl.UserName)
+	RegistCommand(NewCommand("who_online", func (clnt *client.Client,args ...string) string {
+		for _,cl:=range clnt.ServerContext.OnlineClient() {
+			clnt.WriteLine(fmt.Sprint(cl.Id)+" "+cl.UserName)
 		}
 		return ""
 	},""))

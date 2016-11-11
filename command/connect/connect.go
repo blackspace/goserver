@@ -6,8 +6,8 @@ import (
 )
 
 func init() {
-	RegistCommand(NewCommand("quit", func(cln *client.Client, args ...string) string {
-		cln.CloseConnect()
+	RegistCommand(NewCommand("quit", func(clnt *client.Client, args ...string) string {
+		clnt.CloseConnect()
 		return ""
 	},""))
 }

@@ -4,7 +4,7 @@ import (
 	"github.com/blackspace/goserver/client"
 )
 
-type BinaryActionFun func(cln * client.Client,buf []byte) (need_keep_link bool)
+type BinaryActionFun func(clnt * client.Client,buf []byte) (need_keep_link bool)
 type BinaryPredicateFun func([]byte)  bool
 
 type BinaryAction struct {

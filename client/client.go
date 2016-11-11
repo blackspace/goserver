@@ -14,7 +14,7 @@ func NewClient(cc *context.ClientContext) *Client{
 }
 
 func (c *Client)CloseConnect(){
-	c.CloseConnect()
+	c.ClientContext.CloseConnect()
 	c.IsClosed =true
 }
 

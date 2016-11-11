@@ -6,7 +6,7 @@ import (
 )
 
 func init() {
-	RegistCommand(NewCommand("help", func(cln *client.Client, args ...string) (result string) {
+	RegistCommand(NewCommand("help", func(clnt *client.Client, args ...string) (result string) {
 		if len(args)>0 {
 		 	cmd := FindCommandByName(args[0])
 			if cmd==nil {
