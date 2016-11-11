@@ -20,8 +20,8 @@ func (s *Server)_DoWork(conn net.Conn)() {
 	cc := context.NewClientContext(s.ServerContext,conn)
 	s.AddClientContext(cc)
 
-	client:= client.NewClient(cc)
-	defer client.CloseConnect()
+	clt := client.NewClient(cc)
+	defer clt.CloseConnect()
 
 	buf := make([]byte, 0, 1<<10)
 
@@ -31,7 +31,7 @@ func (s *Server)_DoWork(conn net.Conn)() {
 
 		T:
 		for {
-			c, err := client.ReadByte()
+			c, err := clt.ReadByte()
 
 			if err != nil {
 				log.Println(err)
@@ -43,7 +43,7 @@ func (s *Server)_DoWork(conn net.Conn)() {
 			if action.IsBinary(buf) {
 				fa := action.FindActionForBinary(buf)
 				if fa != nil {
-					if fa(client, buf) {
+					if fa(clt, buf) {
 						break T
 					} else {
 						break S
@@ -55,13 +55,13 @@ func (s *Server)_DoWork(conn net.Conn)() {
 				line := string(buf[:len(buf) - 2])
 				la := action.FindActionForLine(line)
 				if la != nil {
-					if la(client, line) {
+					if la(clt, line) {
 						break T
 					} else {
 						break S
 					}
 				} else {
-					client.SendResult("The line is invalid line\r\n")
+					clt.SendResult("The line is invalid line\r\n")
 					break T
 				}
 			}
