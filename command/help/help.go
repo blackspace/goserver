@@ -6,17 +6,17 @@ import (
 )
 
 func init() {
-	RegistCommand(NewCommand("help", func(clnt *client.Client, args ...string) (result string) {
+	Commands.RegistCommand(NewCommand("help", func(clnt *client.Client, args ...string) (result string) {
 		if len(args)>0 {
-		 	cmd := FindCommandByName(args[0])
+		 	cmd := Commands.FindCommandByName(args[0])
 			if cmd==nil {
 				return "There isn't the command"
 			} else {
 				return cmd.Description
 			}
 		} else {
-			for _,cmd := range Commands {
-				result += cmd.Name+"\n"
+			for _,n:=range Commands.AllCommandName() {
+				result=result+"\r\n"+n
 			}
 		}
 

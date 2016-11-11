@@ -19,14 +19,23 @@ func NewCommand(name string,f _CommandFunc,dst string) *_Command {
 	return &_Command{name,f,dst}
 }
 
-var Commands =make([]*_Command,0,1<<8)
 
-func RegistCommand(c *_Command) {
-	Commands =append(Commands,c)
+var Commands =NewCommands()
+
+type _Commands struct {
+	_data []*_Command
 }
 
-func FindCommandByName(n string) *_Command {
-	for _,c :=range Commands {
+func NewCommands() *_Commands {
+	return &_Commands{_data:make([]*_Command,0,1<<8)}
+}
+
+func (cs *_Commands)RegistCommand(c *_Command) {
+	cs._data =append(cs._data,c)
+}
+
+func (cs *_Commands)FindCommandByName(n string) *_Command {
+	for _,c :=range cs._data {
 		if(c.Name==n) {
 			return c
 		}
@@ -34,10 +43,19 @@ func FindCommandByName(n string) *_Command {
 	return nil
 }
 
+func (cs *_Commands)AllCommandName() (result []string) {
+	for _,cmd := range Commands._data {
+		result=append(result ,cmd.Name)
+	}
+	return
+}
+
+
+
 func IsCommand(l string) bool {
 	ss:=strings.Split(l," ")
 
-	for _,c :=range Commands {
+	for _,c :=range Commands._data {
 		if(c.Name==ss[0]) {
 			return true
 		}
@@ -45,30 +63,17 @@ func IsCommand(l string) bool {
 	return false
 }
 
-func _GetFragment(l string) []string {
-	result := strings.Split(l, ` `)
-	return result
-}
-
-
 
 func ExecString(clnt *client.Client,l string)(string) {
-	fs:=_GetFragment(l)
+	fs:=strings.Split(l, ` `)
 
-	log.Println("To Find a command:",fs[0])
-
-	cmd := FindCommandByName(fs[0])
+	cmd := Commands.FindCommandByName(fs[0])
 
 	if(cmd!=nil&&cmd.Func!=nil) {
 		return cmd.Func(clnt,fs[1:]...)
 	} else {
 		return  `The command '`+fs[0]+`' isn't exist.`
 	}
-}
-
-
-func IsEmptyLine(line string) bool {
-	return  len(line)==0
 }
 
 func DoCommand(clnt *client.Client , line string)  bool {
@@ -93,6 +98,12 @@ func DoCommand(clnt *client.Client , line string)  bool {
 
 	return true
 }
+
+
+func IsEmptyLine(line string) bool {
+	return  len(line)==0
+}
+
 
 func DoEmptyLine(clnt *client.Client , line string)  bool {
 	return true
