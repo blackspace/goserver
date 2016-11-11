@@ -11,7 +11,7 @@ import (
 	"github.com/blackspace/goserver"
 )
 
-func DoGetUrl(client *client.Client , url string)  bool {
+func DoGetUrl(cln *client.Client , url string)  bool {
 	res,err:=http.Get(string(url))
 
 	if err !=nil {
@@ -26,7 +26,7 @@ func DoGetUrl(client *client.Client , url string)  bool {
 		log.Fatal(err)
 	}
 
-	client.ClientConnectWriteLine(string(robots))
+	cln.WriteLine(string(robots))
 	return true
 }
 

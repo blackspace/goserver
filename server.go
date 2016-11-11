@@ -20,9 +20,9 @@ func (s *Server)_DoWork(conn net.Conn)() {
 	cc := context.NewClientContext(s.ServerContext,conn)
 	s.AddClientContext(cc)
 
-	client:=client.NewClient(cc)
+	client:= client.NewClient(cc)
 
-	defer client.CloseClientConnect()
+	defer client.CloseConnect()
 
 	buf := make([]byte, 0, 10240)
 
@@ -32,7 +32,7 @@ func (s *Server)_DoWork(conn net.Conn)() {
 
 		T:
 		for {
-			c, err := client.ClientReadByte()
+			c, err := client.ReadByte()
 
 			if err != nil {
 				log.Println(err)
@@ -62,7 +62,7 @@ func (s *Server)_DoWork(conn net.Conn)() {
 						break S
 					}
 				} else {
-					client.ClientConnectSendResult("The line is invalid line\r\n")
+					client.SendResult("The line is invalid line\r\n")
 					break T
 				}
 			}

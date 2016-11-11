@@ -7,17 +7,17 @@ import (
 )
 
 func init() {
-	RegistCommand(NewCommand("user_name",func (client *client.Client,args ...string) string {
+	RegistCommand(NewCommand("user_name",func (cln *client.Client,args ...string) string {
 		if len(args)!=1 {
 			return "ERROR:The Command need one argment."
 		}
-		client.UserName=args[0]
+		cln.UserName=args[0]
 		return ""
 	},""))
-	RegistCommand(NewCommand("whoami",func (client *client.Client,args ...string) string {
-		return client.UserName
+	RegistCommand(NewCommand("whoami",func (cln *client.Client,args ...string) string {
+		return cln.UserName
 	},""))
-	RegistCommand(NewCommand("id",func (client *client.Client,args ...string) string {
-		return fmt.Sprint(client.Id)
+	RegistCommand(NewCommand("id",func (cln *client.Client,args ...string) string {
+		return fmt.Sprint(cln.Id)
 	},""))
 }

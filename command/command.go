@@ -7,7 +7,7 @@ import (
 	"github.com/blackspace/goserver/action"
 )
 
-type _CommandFunc func (client *client.Client,args ...string) string
+type _CommandFunc func (cln *client.Client,args ...string) string
 
 type _Command struct {
 	Name        string
@@ -34,9 +34,11 @@ func FindCommandByName(n string) *_Command {
 	return nil
 }
 
-func IsCommand(n string) bool {
+func IsCommand(l string) bool {
+	ss:=strings.Split(l," ")
+
 	for _,c :=range Commands {
-		if(c.Name==n) {
+		if(c.Name==ss[0]) {
 			return true
 		}
 	}
@@ -50,7 +52,7 @@ func _GetFragment(l string) []string {
 
 
 
-func ExecString(client *client.Client,l string)(string) {
+func ExecString(cln *client.Client,l string)(string) {
 	fs:=_GetFragment(l)
 
 	log.Println("To Find a command:",fs[0])
@@ -58,7 +60,7 @@ func ExecString(client *client.Client,l string)(string) {
 	cmd := FindCommandByName(fs[0])
 
 	if(cmd!=nil&&cmd.Func!=nil) {
-		return cmd.Func(client,fs[1:]...)
+		return cmd.Func(cln,fs[1:]...)
 	} else {
 		return  `The command '`+fs[0]+`' isn't exist.`
 	}
@@ -69,22 +71,22 @@ func IsEmptyLine(line string) bool {
 	return  len(line)==0
 }
 
-func DoCommand(client *client.Client , line string)  bool {
+func DoCommand(cln *client.Client , line string)  bool {
 	log.Println(`Get a line from client:`, line)
 
-	result := ExecString(client, line)
+	result := ExecString(cln, line)
 
 	log.Println("The result of the command is:", result)
 
 	//When the client execute the quit command,the client has been closed,
 	//Can't write the connect and must break the for loop
-	if !client.IsClosed {
+	if !cln.IsClosed {
 		if len(result) > 0 {
-			client.ClientConnectSendResult(result + "\r\n")
+			cln.SendResult(result + "\r\n")
 		}
 
-		if client.NeedPrompt {
-			client.ClientConnectPrintPrompt()
+		if cln.NeedPrompt {
+			cln.PrintPrompt()
 		}
 
 	}
@@ -92,7 +94,7 @@ func DoCommand(client *client.Client , line string)  bool {
 	return true
 }
 
-func DoEmptyLine(client *client.Client , line string)  bool {
+func DoEmptyLine(cln *client.Client , line string)  bool {
 	return true
 }
 

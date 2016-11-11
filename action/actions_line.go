@@ -4,7 +4,7 @@ import (
 	"github.com/blackspace/goserver/client"
 )
 
-type LineActionFun func(c *client.Client,line string) (need_keep_link bool)
+type LineActionFun func(cln *client.Client,line string) (need_keep_link bool)
 type LinePredicateFun func(string)  bool
 
 type LineAction struct {
