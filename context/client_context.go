@@ -8,14 +8,15 @@ import (
 )
 
 type ClientContext struct {
-	connect         net.Conn
-	Reader          * bufio.Reader
-	Writer          * bufio.Writer
-	Id              int64
-	IsClosed        bool
-	NeedPrompt      bool
-	Prompt          string
-	UserName        string
+	_connect      net.Conn
+	Reader        * bufio.Reader
+	Writer        * bufio.Writer
+	Id            int64
+	IsClosed      bool
+	NeedPrompt    bool
+	Prompt        string
+	UserName      string
+	ServerContext *ServerContext
 }
 
 var LastId int64=0
@@ -24,19 +25,15 @@ func GetNewId() int64 {
 	return 	atomic.AddInt64(&LastId,1)
 }
 
-func NewClientContext() (*ClientContext) {
-	return &ClientContext{Id:GetNewId()}
+func NewClientContext(s *ServerContext,conn net.Conn) (*ClientContext) {
+	c:=&ClientContext{Id:GetNewId(),ServerContext:s, _connect:conn}
+	c.Reader=bufio.NewReader(c._connect)
+	c.Writer=bufio.NewWriter(c._connect)
+	return c
 }
-
-func (c *ClientContext)SetConn(conn net.Conn) {
-	c.connect =conn
-	c.Reader=bufio.NewReader(c.connect)
-	c.Writer=bufio.NewWriter(c.connect)
-}
-
 
 func (c *ClientContext)CloseConnect() {
-	c.connect.Close()
+	c._connect.Close()
 }
 
 

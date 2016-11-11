@@ -8,15 +8,17 @@ type LineActionFun func(cc * context.ClientContext,line string) (need_keep_link 
 type LinePredicateFun func(string)  bool
 
 type LineAction struct {
-	MatchPatternFun LinePredicateFun
-	DoActionFun     LineActionFun
+	MatchFun LinePredicateFun
+	DoFun    LineActionFun
 }
+
+var LineActions = _NewLineActions()
 
 type _LineActions struct {
 	_data []LineAction
 }
 
-func NewLineActions() *_LineActions {
+func _NewLineActions() *_LineActions {
 	return &_LineActions{_data:make([]LineAction,0,1<<8)}
 }
 
@@ -24,12 +26,10 @@ func (as *_LineActions)AddAction(mf LinePredicateFun,df LineActionFun) {
 	as._data=append(as._data,LineAction{mf,df})
 }
 
-var LineActions = NewLineActions()
-
 func FindActionForLine(line string) LineActionFun {
 	for  _,r:=range LineActions._data {
-		if r.MatchPatternFun(line) {
-			return r.DoActionFun
+		if r.MatchFun(line) {
+			return r.DoFun
 		}
 	}
 

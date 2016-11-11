@@ -15,7 +15,7 @@ func main() {
 
 	s:=goserver.NewServer()
 
-	s.Start()
+	s.Start("127.0.0.1","5050")
 	defer s.Stop()
 
 	time.Sleep(time.Hour)

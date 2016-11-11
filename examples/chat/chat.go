@@ -17,7 +17,7 @@ import (
 func init() {
 	RegistCommand(NewCommand("broadcast",func (c *context.ClientContext,args ...string) string {
 		m :="MESSAGE:" + fmt.Sprint(c.Id)+" "+args[0]
-		for _,cl:=range context.OnlineClient() {
+		for _,cl:=range c.ServerContext.OnlineClient() {
 			client.ClientConnectWriteLine(cl,m)
 		}
 		return ""
@@ -36,13 +36,13 @@ func init() {
 
 		switch args[0] {
 		case "name":
-			rc=context.FindClientByName(args[1])
+			rc=c.ServerContext.FindClientByName(args[1])
 		case "id":
 			id,err :=strconv.ParseInt(args[1],0,64)
 			if err!=nil {
 				return "ERROR:The id subcommand  need a integer64"
 			} else {
-				rc=context.FindClientById(id)
+				rc=c.ServerContext.FindClientById(id)
 			}
 		}
 
@@ -59,7 +59,7 @@ func init() {
 func main() {
 	s:=goserver.NewServer()
 
-	s.Start()
+	s.Start("127.0.0.1","8058")
 	defer s.Stop()
 
 	time.Sleep(time.Hour)

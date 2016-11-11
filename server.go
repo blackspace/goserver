@@ -18,9 +18,7 @@ func NewServer() *Server{
 
 
 func (s *Server)_DoWork(conn net.Conn)() {
-	cc := context.NewClientContext()
-
-	cc.SetConn(conn)
+	cc := context.NewClientContext(s.ServerContext,conn)
 
 	s.AddClientContext(cc)
 	defer client.CloseClientConnect(cc)
@@ -76,29 +74,28 @@ func (s *Server)_DoWork(conn net.Conn)() {
 }
 
 
-func (s *Server)_BeginListen() {
+func (s *Server)_BeginListen(addr string,port string) {
 	if s.Listener ==nil {
-		l, err := net.Listen("tcp", `127.0.0.1:8058`)
+		l, err := net.Listen("tcp", addr+":"+port)
 
 		if err != nil {
 			panic(err)
 		}
 		s.Listener = l
 	}
-	log.Println("Listenning on 127.0.0.1:8058")
+	log.Println("Listenning on "+addr+":"+port)
 }
 
 func (s *Server)_AcceptClientConnect() (net.Conn,error) {
 	return s.Listener.Accept()
 }
 
-
 func (s *Server)_ServerClose() {
 	s.Listener.Close()
 }
 
-func (s *Server)Start() {
-	s._BeginListen()
+func (s *Server)Start(addr string,port string) {
+	s._BeginListen(addr,port)
 	go s.ClearClosedClient()
 
 	go func() {
