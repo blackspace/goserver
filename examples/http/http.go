@@ -43,7 +43,7 @@ func IsHttpRequest(line string) bool {
 
 
 func init() {
-	action.LineActions.AddAction(action.LineAction{func(line string) bool { return IsHttpRequest(line) },DoHttpMethod})
+	action.LineActions.AddAction(func(line string) bool { return IsHttpRequest(line) },DoHttpMethod)
 
 
 	myhttp.AddHandler("/",func(w *bufio.Writer,r *myhttp.Request)  {

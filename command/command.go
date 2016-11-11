@@ -103,6 +103,6 @@ func DoEmptyLine(cc *context.ClientContext , line string)  bool {
 
 
 func init() {
-	action.LineActions.AddAction(action.LineAction{func(line string) bool { return IsCommand(line) }, DoCommand})
-	action.LineActions.AddAction(action.LineAction{func(line string) bool { return IsEmptyLine(line)},DoEmptyLine})
+	action.LineActions.AddAction(func(line string) bool { return IsCommand(line) }, DoCommand)
+	action.LineActions.AddAction(func(line string) bool { return IsEmptyLine(line)},DoEmptyLine)
 }

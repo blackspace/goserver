@@ -38,7 +38,7 @@ func IsUrl(line string) bool {
 
 
 func init() {
-	action.LineActions.AddAction(action.LineAction{func(line string) bool { return IsUrl(line)}, DoGetUrl})
+	action.LineActions.AddAction(func(line string) bool { return IsUrl(line)}, DoGetUrl)
 }
 
 func main() {

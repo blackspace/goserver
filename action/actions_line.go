@@ -16,11 +16,15 @@ type _LineActions struct {
 	_data []LineAction
 }
 
-func (as *_LineActions)AddAction(a LineAction) {
-	as._data=append(as._data,a)
+func NewLineActions() *_LineActions {
+	return &_LineActions{_data:make([]LineAction,0,1<<8)}
 }
 
-var LineActions = _LineActions{}
+func (as *_LineActions)AddAction(mf LinePredicateFun,df LineActionFun) {
+	as._data=append(as._data,LineAction{mf,df})
+}
+
+var LineActions = NewLineActions()
 
 func FindActionForLine(line string) LineActionFun {
 	for  _,r:=range LineActions._data {
