@@ -1,21 +1,36 @@
 package action
 
 import (
-	"goserver/context"
+	"github.com/blackspace/goserver/context"
 )
 
 type FlagActionFun func(cc * context.ClientContext,buf []byte) (need_keep_link bool)
 type FlagPredicateFun func([]byte)  bool
-var FlagActions = []struct {
+
+
+type FlagAction struct {
 	MatchPatternFun FlagPredicateFun
 	DoActionFun     FlagActionFun
-}{
-	{func(buf []byte) bool { return IsSocksV4Instruction(buf)}, DoSocksV4},
 }
 
 
+type _FlagActions struct {
+	_data []FlagAction
+}
+
+func (as *_FlagActions)AddAction(mf FlagPredicateFun,df FlagActionFun) {
+	as._data=append(as._data,FlagAction{mf,df})
+}
+
+
+func NewFlagActions() *_FlagActions {
+	return &_FlagActions{_data:make([]FlagAction,0,1<<8)}
+}
+
+var FlagActions=NewFlagActions()
+
 func FindActionForFlag(buf []byte) FlagActionFun {
-	for  _,r:=range FlagActions {
+	for  _,r:=range FlagActions._data {
 		if r.MatchPatternFun(buf) {
 			return r.DoActionFun
 		}
@@ -28,7 +43,7 @@ func IsFlag(buf []byte) bool {
 	if len(buf)<=1 {
 		return false
 	} else {
-		for  _,r:=range FlagActions {
+		for  _,r:=range FlagActions._data {
 			if r.MatchPatternFun(buf) {
 				return true
 			}
@@ -38,6 +53,3 @@ func IsFlag(buf []byte) bool {
 	return false
 }
 
-func IsSocksV4Instruction(buf []byte) bool {
-	return len(buf) >= 8 && buf[0] == 0x04 && buf[1] == 0x01 &&  buf[len(buf) - 1] == 0x00
-}

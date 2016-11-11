@@ -1,12 +1,11 @@
-package main
+package goserver
 
 import (
-	"log"
 	"net"
-	"goserver/context"
-	"goserver/server"
-	"goserver/client"
-	"goserver/action"
+	"log"
+	"github.com/blackspace/goserver/context"
+	"github.com/blackspace/goserver/client"
+	"github.com/blackspace/goserver/action"
 )
 
 func doWork(conn net.Conn)() {
@@ -15,7 +14,6 @@ func doWork(conn net.Conn)() {
 	cc.SetConn(conn)
 
 	context.ServerContextAddClientContext(cc)
-
 	defer client.CloseClientConnect(cc)
 
 	buf := make([]byte, 0, 10240)
@@ -68,21 +66,47 @@ func doWork(conn net.Conn)() {
 	log.Println("A goroutine has finished")
 }
 
-func init() {
-	server.ServerBeginListen()
-	go context.ServerContextClearClosedClient()
-}
 
-func main() {
-	defer server.ServerClose()
+func ServerBeginListen() {
+	if context.ServerContext.Listener ==nil {
+		l, err := net.Listen("tcp", `127.0.0.1:8058`)
 
-	for {
-		conn,err:= server.ServerAcceptClientConnect()
 		if err != nil {
-			log.Fatalln(err)
+			panic(err)
 		}
-		go doWork(conn)
+		context.ServerContext.Listener = l
 	}
-
-	log.Println("goserver exited")
+	log.Println("Listenning on 127.0.0.1:8058")
 }
+
+func ServerAcceptClientConnect() (net.Conn,error) {
+	return context.ServerContext.Listener.Accept()
+}
+
+
+func ServerClose() {
+	context.ServerContext.Listener.Close()
+}
+
+func Start() {
+	ServerBeginListen()
+	go context.ServerContextClearClosedClient()
+
+	go func() {
+		for {
+			conn,err:= ServerAcceptClientConnect()
+			log.Println("A connection to client has been established")
+			if err != nil {
+				panic(err)
+			}
+			go doWork(conn)
+		}
+
+	}()
+}
+
+func Stop() {
+	ServerClose()
+}
+
+

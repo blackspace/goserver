@@ -18,6 +18,9 @@ type Response struct {
 	Body string
 }
 
+func NewResponse() *Response {
+	return &Response{StatusLine:StatusLine{"HTTP/1.1","200",""}}
+}
 
 func (r Response)ToString() string {
 	return r.StatusLine.ToString()+"\r\n"+r.Header.ToString()+"\r\n"+r.Body

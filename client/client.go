@@ -1,7 +1,7 @@
 package client
 
 import (
-	"goserver/context"
+	"github.com/blackspace/goserver/context"
 )
 
 

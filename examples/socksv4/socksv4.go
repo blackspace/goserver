@@ -1,11 +1,19 @@
-package action
+package main
 
 import (
-	"goserver/context"
 	"net"
 	"sync"
-	"goserver/client"
+	"time"
+	"github.com/blackspace/goserver/client"
+	"github.com/blackspace/goserver/context"
+	"github.com/blackspace/goserver/action"
+	"github.com/blackspace/goserver"
 )
+
+
+func IsSocksV4Instruction(buf []byte) bool {
+	return len(buf) >= 8 && buf[0] == 0x04 && buf[1] == 0x01 &&  buf[len(buf) - 1] == 0x00
+}
 
 
 func DoSocksV4(cc *context.ClientContext , buf []byte)  bool {
@@ -55,4 +63,15 @@ func DoSocksV4(cc *context.ClientContext , buf []byte)  bool {
 
 	wg.Wait()
 	return false
+}
+
+func init() {
+	action.FlagActions.AddAction(func(buf []byte) bool { return IsSocksV4Instruction(buf)}, DoSocksV4)
+}
+
+
+func main() {
+	goserver.Start()
+	defer goserver.Stop()
+	time.Sleep(time.Hour)
 }
