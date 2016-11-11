@@ -14,7 +14,7 @@ import (
 
 
 func init() {
-	Commands.RegistCommand(NewCommand("broadcast",func (clt *client.Client,args ...string) string {
+	Commands.RegistCommand("broadcast",func (clt *client.Client,args ...string) string {
 		if len(args)!=0 {
 			m :="MESSAGE:" + fmt.Sprint(clt.Id)+" "+args[0]
 			for _,cl:=range clt.ServerContext.OnlineClient() {
@@ -23,8 +23,8 @@ func init() {
 		}
 
 		return ""
-	},""))
-	Commands.RegistCommand(NewCommand("say_to",func (clt *client.Client,args ...string) string {
+	},"")
+	Commands.RegistCommand("say_to",func (clt *client.Client,args ...string) string {
 		if len(args)!=3 {
 			return "ERROR:The command require 3 argments.\nLike as 'say_to id 1 ddddd'"
 		} else if args[0]!="name"&&args[0]!="id" {
@@ -55,7 +55,7 @@ func init() {
 		}
 
 		return ""
-	},""))
+	},"")
 }
 
 func main() {

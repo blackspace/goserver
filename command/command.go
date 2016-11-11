@@ -29,7 +29,8 @@ func NewCommands() *_Commands {
 	return &_Commands{_data:make([]*_Command,0,1<<8)}
 }
 
-func (cs *_Commands)RegistCommand(c *_Command) {
+func (cs *_Commands)RegistCommand(name string,f _CommandFunc,dst string) {
+	c:=NewCommand(name,f,dst)
 	cs._data =append(cs._data,c)
 }
 

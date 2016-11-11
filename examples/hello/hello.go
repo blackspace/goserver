@@ -8,9 +8,9 @@ import (
 )
 
 func main() {
-	command.Commands.RegistCommand(command.NewCommand("hello", func(clt *client.Client, args ...string) string {
+	command.Commands.RegistCommand("hello", func(clt *client.Client, args ...string) string {
 		return "hello,I am a robot"
-	},"say hello"))
+	},"say hello")
 
 	s:=goserver.NewServer()
 	s.Start("127.0.0.1","5050")
