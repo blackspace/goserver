@@ -64,7 +64,7 @@ func IsCommand(l string) bool {
 }
 
 
-func ExecString(clnt *client.Client,l string)(string) {
+func _ExecString(clnt *client.Client,l string)(string) {
 	fs:=strings.Split(l, ` `)
 
 	cmd := Commands.FindCommandByName(fs[0])
@@ -79,7 +79,7 @@ func ExecString(clnt *client.Client,l string)(string) {
 func DoCommand(clnt *client.Client , line string)  bool {
 	log.Println(`Get a line from client:`, line)
 
-	result := ExecString(clnt, line)
+	result := _ExecString(clnt, line)
 
 	log.Println("The result of the command is:", result)
 

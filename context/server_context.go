@@ -104,7 +104,6 @@ func (s *ServerContext)ClearClosedClient() {
 
 			for i,c:=range s._client_contexts {
 				if c!=nil&&c.IsClosed {
-					log.Println(`Find a closed connect to clear:`,c)
 					s._client_contexts[i]=nil
 				}
 			}
