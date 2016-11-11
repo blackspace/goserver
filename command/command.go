@@ -7,34 +7,34 @@ import (
 	"github.com/blackspace/goserver/action"
 )
 
-type _CommandFunc func (clt *client.Client,args ...string) string
+type CommandFunc func (clt *client.Client,args ...string) string
 
-type _Command struct {
+type Command struct {
 	Name        string
-	Func        _CommandFunc
+	Func        CommandFunc
 	Description string
 }
 
-func NewCommand(name string,f _CommandFunc,dst string) *_Command {
-	return &_Command{name,f,dst}
+func NewCommand(name string,f CommandFunc,dst string) *Command {
+	return &Command{name,f,dst}
 }
 
 var Commands =NewCommands()
 
 type _Commands struct {
-	_data []*_Command
+	_data []*Command
 }
 
 func NewCommands() *_Commands {
-	return &_Commands{_data:make([]*_Command,0,1<<8)}
+	return &_Commands{_data:make([]*Command,0,1<<8)}
 }
 
-func (cs *_Commands)RegistCommand(name string,f _CommandFunc,dst string) {
+func (cs *_Commands)RegistCommand(name string,f CommandFunc,dst string) {
 	c:=NewCommand(name,f,dst)
 	cs._data =append(cs._data,c)
 }
 
-func (cs *_Commands)FindCommandByName(n string) *_Command {
+func (cs *_Commands)FindCommandByName(n string) *Command {
 	for _,c :=range cs._data {
 		if(c.Name==n) {
 			return c
