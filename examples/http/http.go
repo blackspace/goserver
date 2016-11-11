@@ -55,7 +55,10 @@ func init() {
 }
 
 func main() {
-	goserver.Start()
-	defer goserver.Stop()
+	s:=goserver.NewServer()
+
+	s.Start()
+	defer s.Stop()
+
 	time.Sleep(time.Hour)
 }

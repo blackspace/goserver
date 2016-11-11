@@ -8,12 +8,21 @@ import (
 	"github.com/blackspace/goserver/action"
 )
 
-func doWork(conn net.Conn)() {
+type Server struct {
+	 *context.ServerContext
+}
+
+func NewServer() *Server{
+	return &Server{ServerContext:context.NewServerContext()}
+}
+
+
+func (s *Server)_DoWork(conn net.Conn)() {
 	cc := context.NewClientContext()
 
 	cc.SetConn(conn)
 
-	context.ServerContextAddClientContext(cc)
+	s.AddClientContext(cc)
 	defer client.CloseClientConnect(cc)
 
 	buf := make([]byte, 0, 10240)
@@ -67,46 +76,44 @@ func doWork(conn net.Conn)() {
 }
 
 
-func ServerBeginListen() {
-	if context.ServerContext.Listener ==nil {
+func (s *Server)_BeginListen() {
+	if s.Listener ==nil {
 		l, err := net.Listen("tcp", `127.0.0.1:8058`)
 
 		if err != nil {
 			panic(err)
 		}
-		context.ServerContext.Listener = l
+		s.Listener = l
 	}
 	log.Println("Listenning on 127.0.0.1:8058")
 }
 
-func ServerAcceptClientConnect() (net.Conn,error) {
-	return context.ServerContext.Listener.Accept()
+func (s *Server)_AcceptClientConnect() (net.Conn,error) {
+	return s.Listener.Accept()
 }
 
 
-func ServerClose() {
-	context.ServerContext.Listener.Close()
+func (s *Server)_ServerClose() {
+	s.Listener.Close()
 }
 
-func Start() {
-	ServerBeginListen()
-	go context.ServerContextClearClosedClient()
+func (s *Server)Start() {
+	s._BeginListen()
+	go s.ClearClosedClient()
 
 	go func() {
 		for {
-			conn,err:= ServerAcceptClientConnect()
+			conn,err:= s._AcceptClientConnect()
 			log.Println("A connection to client has been established")
 			if err != nil {
 				panic(err)
 			}
-			go doWork(conn)
+			go s._DoWork(conn)
 		}
 
 	}()
 }
 
-func Stop() {
-	ServerClose()
+func (s *Server)Stop() {
+	s._ServerClose()
 }
-
-

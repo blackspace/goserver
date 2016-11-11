@@ -8,16 +8,21 @@ import (
 	"sync"
 )
 
-var ServerContext =&struct {
+type ServerContext struct {
 	clients  [](*ClientContext)
 	Listener net.Listener
 	mutex    sync.Mutex
-}{clients:make([](*ClientContext),0,1000)}
+}
 
 
-func OnlineClient()  []*ClientContext {
+func NewServerContext() *ServerContext{
+	return &ServerContext{clients:make([](*ClientContext),0,1000)}
+}
+
+
+func (s *ServerContext)OnlineClient()  []*ClientContext {
 	result :=make( []*ClientContext,0,1024)
-	for _,c :=range ServerContext.clients {
+	for _,c :=range s.clients {
 		if c!=nil&&c.IsClosed==false {
 			result=append(result,c)
 		}
@@ -25,8 +30,8 @@ func OnlineClient()  []*ClientContext {
 	return result
 }
 
-func FindClientById(id int64) *ClientContext {
-	for _,c :=range ServerContext.clients {
+func (s *ServerContext)FindClientById(id int64) *ClientContext {
+	for _,c :=range s.clients {
 		if c.Id==id {
 			return c
 		}
@@ -34,8 +39,8 @@ func FindClientById(id int64) *ClientContext {
 	return nil
 }
 
-func FindClientByName(n string) *ClientContext {
-	for _,c := range ServerContext.clients {
+func (s *ServerContext)FindClientByName(n string) *ClientContext {
+	for _,c := range s.clients {
 		if c.UserName==n {
 			return c
 		}
@@ -45,13 +50,13 @@ func FindClientByName(n string) *ClientContext {
 
 
 
-func  ClientCount() int {
-	ServerContext.mutex.Lock()
-	defer ServerContext.mutex.Unlock()
+func  (s *ServerContext)ClientCount() int {
+	s.mutex.Lock()
+	defer s.mutex.Unlock()
 
 	var count=0
 
-	for _,c := range ServerContext.clients {
+	for _,c := range s.clients {
 		if c!=nil {
 			count++
 		}
@@ -61,38 +66,38 @@ func  ClientCount() int {
 }
 
 
-func ServerContextAddClientContext(c * ClientContext) {
-	defer ServerContext.mutex.Unlock()
+func (s *ServerContext)AddClientContext(c * ClientContext) {
+	defer s.mutex.Unlock()
 
 
 	log.Println("Try to add a new client Context:",c)
 
-	ServerContext.mutex.Lock()
+	s.mutex.Lock()
 
-	for i,lc :=range ServerContext.clients {
+	for i,lc :=range s.clients {
 		if lc==nil {
 			log.Println("Reuse the recoveried client context",i)
-			ServerContext.clients[i]=c
+			s.clients[i]=c
 			return
 		}
 	}
 
 	log.Println("Add a new client Context:",c)
 
-	ServerContext.clients =append(ServerContext.clients,c)
+	s.clients =append(s.clients,c)
 
 }
 
-func ServerContextClearClosedClient() {
+func (s *ServerContext)ClearClosedClient() {
 	for {
 		func (){
-			ServerContext.mutex.Lock()
-			defer ServerContext.mutex.Unlock()
+			s.mutex.Lock()
+			defer s.mutex.Unlock()
 
-			for i,c:=range ServerContext.clients {
+			for i,c:=range s.clients {
 				if c!=nil&&c.IsClosed {
 					log.Println(`Find a closed connect to clear:`,c)
-					ServerContext.clients[i]=nil
+					s.clients[i]=nil
 				}
 			}
 		}()
