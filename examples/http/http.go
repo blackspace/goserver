@@ -1,27 +1,27 @@
 package main
 
 import (
-	"github.com/blackspace/goserver/context"
 	"github.com/blackspace/goserver/action"
 	"./myhttp"
 	"bufio"
 	"regexp"
 	"time"
 	"github.com/blackspace/goserver"
+	"github.com/blackspace/goserver/client"
 )
 
 
-func DoHttpMethod(cc * context.ClientContext, start_line string) bool {
+func DoHttpMethod(client *client.Client, start_line string) bool {
 	request := myhttp.NewRequest()
 
 	request.ExtractStartLine(start_line)
-	request.ExtractHeaderFromStream(cc.Reader)
+	request.ExtractHeaderFromStream(client.Reader)
 
 	if request.Method=="POST" {
-		request.ExtractBodyFromStream(cc.Reader)
+		request.ExtractBodyFromStream(client.Reader)
 	}
 
-	DoRequest(cc.Writer,request)
+	DoRequest(client.Writer,request)
 
 	return false
 }

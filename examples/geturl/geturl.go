@@ -7,12 +7,11 @@ import (
 	"regexp"
 	"time"
 	"github.com/blackspace/goserver/client"
-	"github.com/blackspace/goserver/context"
 	"github.com/blackspace/goserver/action"
 	"github.com/blackspace/goserver"
 )
 
-func DoGetUrl(cc *context.ClientContext , url string)  bool {
+func DoGetUrl(client *client.Client , url string)  bool {
 	res,err:=http.Get(string(url))
 
 	if err !=nil {
@@ -27,7 +26,7 @@ func DoGetUrl(cc *context.ClientContext , url string)  bool {
 		log.Fatal(err)
 	}
 
-	client.ClientConnectWriteLine(cc,string(robots))
+	client.ClientConnectWriteLine(string(robots))
 	return true
 }
 

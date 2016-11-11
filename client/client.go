@@ -5,44 +5,50 @@ import (
 )
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+type Client struct {
+	*context.ClientContext
+}
 
-func CloseClientConnect(c *context.ClientContext){
+func NewClient(cc *context.ClientContext) *Client{
+	return &Client{cc}
+}
+
+func (c *Client)CloseClientConnect(){
 	c.CloseConnect()
 	c.IsClosed =true
 }
 
-func ClientConnectReadLine(c *context.ClientContext)(string , error) {
+func (c *Client)ClientConnectReadLine()(string , error) {
 	l,_,err:=c.Reader.ReadLine()
 
 	return string(l), err
 }
 
-func ClientConnectSendResult(c *context.ClientContext,r string) {
+func (c *Client)ClientConnectSendResult(r string) {
 	c.Writer.WriteString(r)
 	c.Writer.Flush()
 }
 
-func ClientConnectPrintPrompt(c *context.ClientContext) {
+func (c *Client)ClientConnectPrintPrompt() {
 	c.Writer.WriteString(c.Prompt)
 	c.Writer.Flush()
 }
 
-func ClientConnectWriteLine(c *context.ClientContext,s string) {
+func (c *Client)ClientConnectWriteLine(s string) {
 	c.Writer.WriteString(s+"\n")
 	c.Writer.Flush()
 }
 
-func ClientConnectWrite(c *context.ClientContext,b []byte) (int,error){
+func (c *Client)ClientConnectWrite(b []byte) (int,error){
 	n,err := c.Writer.Write(b)
 	c.Writer.Flush()
 	return n,err
 }
 
-func ClientConnectRead(c *context.ClientContext,b []byte)(int,error){
+func (c *Client)ClientConnectRead(b []byte)(int,error){
 	return c.Reader.Read(b)
 }
 
-func ClientReadByte(c *context.ClientContext) (byte,error) {
+func (c *Client)ClientReadByte() (byte,error) {
 	return c.Reader.ReadByte()
 }

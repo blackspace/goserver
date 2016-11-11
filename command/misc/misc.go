@@ -2,12 +2,12 @@ package misc
 
 import (
 	"strings"
-	"github.com/blackspace/goserver/context"
 	. "github.com/blackspace/goserver/command"
+	"github.com/blackspace/goserver/client"
 )
 
 func init() {
-	RegistCommand(NewCommand("echo", func(c *context.ClientContext, args ...string) (result string) {
+	RegistCommand(NewCommand("echo", func(client *client.Client, args ...string) (result string) {
 		return strings.Join(args," ")
 	},""))
 }

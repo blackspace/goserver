@@ -1,10 +1,10 @@
 package action
 
 import (
-	"github.com/blackspace/goserver/context"
+	"github.com/blackspace/goserver/client"
 )
 
-type BinaryActionFun func(cc * context.ClientContext,buf []byte) (need_keep_link bool)
+type BinaryActionFun func(c * client.Client,buf []byte) (need_keep_link bool)
 type BinaryPredicateFun func([]byte)  bool
 
 type BinaryAction struct {
