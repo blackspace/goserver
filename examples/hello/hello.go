@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	command.Commands.RegistCommand(command.NewCommand("hello", func(clnt *client.Client, args ...string) string {
+	command.Commands.RegistCommand(command.NewCommand("hello", func(clt *client.Client, args ...string) string {
 		return "hello,I am a robot"
 	},"say hello"))
 

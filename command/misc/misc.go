@@ -7,7 +7,7 @@ import (
 )
 
 func init() {
-	Commands.RegistCommand(NewCommand("echo", func(clnt *client.Client, args ...string) (result string) {
+	Commands.RegistCommand(NewCommand("echo", func(clt *client.Client, args ...string) (result string) {
 		return strings.Join(args," ")
 	},""))
 }

@@ -16,13 +16,13 @@ func IsSocksV4Instruction(buf []byte) bool {
 }
 
 
-func DoSocksV4(clnt client.Client , buf []byte)  bool {
+func DoSocksV4(clt client.Client , buf []byte)  bool {
 	port := buf[2:4]
 	ip := buf[4:8]
 
 	result := append(append([]byte{0x00, 0x5A}, port...), ip...)
 
-	clnt.Write(result)
+	clt.Write(result)
 
 	rc, _ := net.DialTCP("tcp", nil, &net.TCPAddr{ip, int(port[1]) + int(port[0]) << 8, ""})
 
@@ -33,7 +33,7 @@ func DoSocksV4(clnt client.Client , buf []byte)  bool {
 		for {
 			rbuf := make([]byte, 1024)
 
-			n, err := clnt.Read(rbuf)
+			n, err := clt.Read(rbuf)
 
 			if err != nil {
 				break
@@ -53,10 +53,10 @@ func DoSocksV4(clnt client.Client , buf []byte)  bool {
 				break
 			}
 
-			clnt.Write(rbuf[:n])
+			clt.Write(rbuf[:n])
 
 		}
-		clnt.CloseConnect()
+		clt.CloseConnect()
 		rc.Close()
 		wg.Done()
 	}()

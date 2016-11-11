@@ -6,7 +6,7 @@ A server framework by registing command to implement features.
 Usage
 ---------------------------------------------------------
 ```
-	command.RegistCommand(command.NewCommand("hello", func(clnt *client.Client, args ...string) string {
+	command.RegistCommand(command.NewCommand("hello", func(clt *client.Client, args ...string) string {
 		return "hello,I am a robot"
 	},"say hello"))
 

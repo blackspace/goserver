@@ -8,14 +8,14 @@ import (
 const Prompt="\033[40;32mgochat-server>\033[0m"
 
 func init() {
-	Commands.RegistCommand(NewCommand("show_prompt",func (clnt *client.Client,args ...string) string {
-		clnt.NeedPrompt=true
-		clnt.Prompt=Prompt
+	Commands.RegistCommand(NewCommand("show_prompt",func (clt *client.Client,args ...string) string {
+		clt.NeedPrompt=true
+		clt.Prompt=Prompt
 		return ""
 	},""))
-	Commands.RegistCommand(NewCommand("hide_prompt",func (clnt *client.Client,args ...string) string {
-		clnt.NeedPrompt=false
-		clnt.Prompt=""
+	Commands.RegistCommand(NewCommand("hide_prompt",func (clt *client.Client,args ...string) string {
+		clt.NeedPrompt=false
+		clt.Prompt=""
 		return ""
 	},""))
 }

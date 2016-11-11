@@ -11,17 +11,17 @@ import (
 )
 
 
-func DoHttpMethod(clnt *client.Client, start_line string) bool {
+func DoHttpMethod(clt *client.Client, start_line string) bool {
 	request := myhttp.NewRequest()
 
 	request.ExtractStartLine(start_line)
-	request.ExtractHeaderFromStream(clnt.Reader)
+	request.ExtractHeaderFromStream(clt.Reader)
 
 	if request.Method=="POST" {
-		request.ExtractBodyFromStream(clnt.Reader)
+		request.ExtractBodyFromStream(clt.Reader)
 	}
 
-	DoRequest(clnt.Writer,request)
+	DoRequest(clt.Writer,request)
 
 	return false
 }

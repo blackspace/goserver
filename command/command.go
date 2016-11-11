@@ -7,7 +7,7 @@ import (
 	"github.com/blackspace/goserver/action"
 )
 
-type _CommandFunc func (clnt *client.Client,args ...string) string
+type _CommandFunc func (clt *client.Client,args ...string) string
 
 type _Command struct {
 	Name        string
@@ -64,34 +64,34 @@ func IsCommand(l string) bool {
 }
 
 
-func _ExecString(clnt *client.Client,l string)(string) {
+func _ExecString(clt *client.Client,l string)(string) {
 	fs:=strings.Split(l, ` `)
 
 	cmd := Commands.FindCommandByName(fs[0])
 
 	if(cmd!=nil&&cmd.Func!=nil) {
-		return cmd.Func(clnt,fs[1:]...)
+		return cmd.Func(clt,fs[1:]...)
 	} else {
 		return  `The command '`+fs[0]+`' isn't exist.`
 	}
 }
 
-func DoCommand(clnt *client.Client , line string)  bool {
+func DoCommand(clt *client.Client , line string)  bool {
 	log.Println(`Get a line from client:`, line)
 
-	result := _ExecString(clnt, line)
+	result := _ExecString(clt, line)
 
 	log.Println("The result of the command is:", result)
 
 	//When the client execute the quit command,the client has been closed,
 	//Can't write the connect and must break the for loop
-	if !clnt.IsClosed {
+	if !clt.IsClosed {
 		if len(result) > 0 {
-			clnt.SendResult(result + "\r\n")
+			clt.SendResult(result + "\r\n")
 		}
 
-		if clnt.NeedPrompt {
-			clnt.PrintPrompt()
+		if clt.NeedPrompt {
+			clt.PrintPrompt()
 		}
 
 	}
@@ -105,7 +105,7 @@ func IsEmptyLine(line string) bool {
 }
 
 
-func DoEmptyLine(clnt *client.Client , line string)  bool {
+func DoEmptyLine(clt *client.Client , line string)  bool {
 	return true
 }
 
