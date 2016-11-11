@@ -1,6 +1,6 @@
 goserver
 --------------------------------------------------------
-A server framework by registing command to implement one feature.
+A server framework by registing command to implement features.
 
 
 Usage
