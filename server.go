@@ -65,9 +65,6 @@ func (s *Server)_DoWork(conn net.Conn)() {
 					break T
 				}
 			}
-
-
-
 		}
 	}
 }

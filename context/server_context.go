@@ -14,7 +14,6 @@ type ServerContext struct {
 	_mutex           sync.Mutex
 }
 
-
 func NewServerContext() *ServerContext{
 	return &ServerContext{_client_contexts:make([](*ClientContext),0,1000)}
 }
@@ -26,7 +25,6 @@ func (s *ServerContext)SetListener(l net.Listener) {
 func (s *ServerContext)GetListener() net.Listener{
 	return s._listener
 }
-
 
 func (s *ServerContext)OnlineClient()  []*ClientContext {
 	result :=make( []*ClientContext,0,1024)
@@ -56,8 +54,6 @@ func (s *ServerContext)FindClientByName(n string) *ClientContext {
 	return nil
 }
 
-
-
 func  (s *ServerContext)ClientCount() int {
 	s._mutex.Lock()
 	defer s._mutex.Unlock()
@@ -72,7 +68,6 @@ func  (s *ServerContext)ClientCount() int {
 
 	return count
 }
-
 
 func (s *ServerContext)AddClientContext(c * ClientContext) {
 	defer s._mutex.Unlock()

@@ -19,7 +19,6 @@ func NewCommand(name string,f _CommandFunc,dst string) *_Command {
 	return &_Command{name,f,dst}
 }
 
-
 var Commands =NewCommands()
 
 type _Commands struct {
@@ -50,8 +49,6 @@ func (cs *_Commands)AllCommandName() (result []string) {
 	return
 }
 
-
-
 func IsCommand(l string) bool {
 	ss:=strings.Split(l," ")
 
@@ -62,7 +59,6 @@ func IsCommand(l string) bool {
 	}
 	return false
 }
-
 
 func _ExecString(clt *client.Client,l string)(string) {
 	fs:=strings.Split(l, ` `)
@@ -99,17 +95,13 @@ func DoCommand(clt *client.Client , line string)  bool {
 	return true
 }
 
-
 func IsEmptyLine(line string) bool {
 	return  len(line)==0
 }
 
-
 func DoEmptyLine(clt *client.Client , line string)  bool {
 	return true
 }
-
-
 
 func init() {
 	action.LineActions.AddAction(func(line string) bool { return IsCommand(line) }, DoCommand)
