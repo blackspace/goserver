@@ -75,23 +75,23 @@ func (s *Server)_DoWork(conn net.Conn)() {
 
 
 func (s *Server)_BeginListen(addr string,port string) {
-	if s.Listener ==nil {
+	if s.GetListener() ==nil {
 		l, err := net.Listen("tcp", addr+":"+port)
 
 		if err != nil {
 			panic(err)
 		}
-		s.Listener = l
+		s.SetListener(l)
 	}
 	log.Println("Listenning on "+addr+":"+port)
 }
 
 func (s *Server)_AcceptClientConnect() (net.Conn,error) {
-	return s.Listener.Accept()
+	return s.GetListener().Accept()
 }
 
 func (s *Server)_ServerClose() {
-	s.Listener.Close()
+	s.GetListener().Close()
 }
 
 func (s *Server)Start(addr string,port string) {

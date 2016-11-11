@@ -9,14 +9,22 @@ import (
 )
 
 type ServerContext struct {
-	_clients [](*ClientContext)
-	Listener net.Listener
-	_mutex   sync.Mutex
+	_clients  [](*ClientContext)
+	_listener net.Listener
+	_mutex    sync.Mutex
 }
 
 
 func NewServerContext() *ServerContext{
 	return &ServerContext{_clients:make([](*ClientContext),0,1000)}
+}
+
+func (s *ServerContext)SetListener(l net.Listener) {
+	s._listener =l
+}
+
+func (s *ServerContext)GetListener() net.Listener{
+	return s._listener
 }
 
 
