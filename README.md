@@ -6,9 +6,9 @@ A server framework by registing command to implement features.
 Usage
 ---------------------------------------------------------
 ```
-	command.RegistCommand(command.NewCommand("hello", func(clt *client.Client, args ...string) string {
-		return "hello,I am a robot"
-	},"say hello"))
+    command.Commands.RegistCommand("hello", func(clt *client.Client, args ...string) string {
+        return "hello,I am a robot"
+    },"say hello")
 
 
 	s:=goserver.NewServer()
