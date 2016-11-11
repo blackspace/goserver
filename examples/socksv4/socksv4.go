@@ -66,7 +66,7 @@ func DoSocksV4(cc *context.ClientContext , buf []byte)  bool {
 }
 
 func init() {
-	action.FlagActions.AddAction(func(buf []byte) bool { return IsSocksV4Instruction(buf)}, DoSocksV4)
+	action.BinaryActions.AddAction(func(buf []byte) bool { return IsSocksV4Instruction(buf)}, DoSocksV4)
 }
 
 

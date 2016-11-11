@@ -40,8 +40,8 @@ func (s *Server)_DoWork(conn net.Conn)() {
 
 			buf = append(buf, c)
 
-			if action.IsFlag(buf) {
-				fa := action.FindActionForFlag(buf)
+			if action.IsBinary(buf) {
+				fa := action.FindActionForBinary(buf)
 				if fa != nil {
 					if fa(cc, buf) {
 						break T
