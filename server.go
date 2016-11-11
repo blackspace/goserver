@@ -74,7 +74,7 @@ func (s *Server)_DoWork(conn net.Conn)() {
 }
 
 
-func (s *Server)_BeginListen(addr string,port string) {
+func (s *Server)Start(addr string,port string) {
 	if s.GetListener() ==nil {
 		l, err := net.Listen("tcp", addr+":"+port)
 
@@ -82,35 +82,27 @@ func (s *Server)_BeginListen(addr string,port string) {
 			panic(err)
 		}
 		s.SetListener(l)
-	}
-	log.Println("Listenning on "+addr+":"+port)
-}
 
-func (s *Server)_AcceptClientConnect() (net.Conn,error) {
-	return s.GetListener().Accept()
-}
+		log.Println("Listenning on "+addr+":"+port)
 
-func (s *Server)_ServerClose() {
-	s.GetListener().Close()
-}
+		go s.ClearClosedClient()
 
-func (s *Server)Start(addr string,port string) {
-	s._BeginListen(addr,port)
-	go s.ClearClosedClient()
-
-	go func() {
-		for {
-			conn,err:= s._AcceptClientConnect()
-			log.Println("A connection to client has been established")
-			if err != nil {
-				panic(err)
+		go func() {
+			for {
+				conn,err:= s.GetListener().Accept()
+				log.Println("A connection to client has been established")
+				if err != nil {
+					panic(err)
+				}
+				go s._DoWork(conn)
 			}
-			go s._DoWork(conn)
-		}
 
-	}()
+		}()
+	} else {
+		panic("This server has already been start")
+	}
 }
 
 func (s *Server)Stop() {
-	s._ServerClose()
+	s.GetListener().Close()
 }
