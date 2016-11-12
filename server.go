@@ -34,7 +34,6 @@ func (s *Server)_DoWork(conn net.Conn)() {
 			c, err := clt.ReadByte()
 
 			if err != nil {
-				log.Println(err)
 				break S
 			}
 
@@ -86,7 +85,6 @@ func (s *Server)Start(addr string,port string) {
 		go func() {
 			for {
 				conn,err:= s.GetListener().Accept()
-				log.Println("A connection to client has been established")
 				if err != nil {
 					panic(err)
 				}

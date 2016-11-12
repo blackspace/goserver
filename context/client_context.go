@@ -9,8 +9,8 @@ import (
 
 type ClientContext struct {
 	_connect      net.Conn
-	Reader        * bufio.Reader
-	Writer        * bufio.Writer
+	Reader        *bufio.Reader
+	Writer        *bufio.Writer
 	Id            int64
 	IsClosed      bool
 	NeedPrompt    bool
@@ -34,6 +34,10 @@ func NewClientContext(s *ServerContext,conn net.Conn) (*ClientContext) {
 
 func (c *ClientContext)CloseConnect() {
 	c._connect.Close()
+}
+
+func (c *ClientContext)RemoteAddr() net.Addr {
+	return c._connect.RemoteAddr()
 }
 
 

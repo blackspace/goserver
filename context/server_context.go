@@ -2,7 +2,6 @@ package context
 
 
 import (
-	"log"
 	"time"
 	"net"
 	"sync"
@@ -72,20 +71,14 @@ func  (s *ServerContext)ClientCount() int {
 func (s *ServerContext)AddClientContext(c * ClientContext) {
 	defer s._mutex.Unlock()
 
-
-	log.Println("Try to add a new client Context:",c)
-
 	s._mutex.Lock()
 
 	for i,lc :=range s._client_contexts {
 		if lc==nil {
-			log.Println("Reuse the recoveried client context",i)
 			s._client_contexts[i]=c
 			return
 		}
 	}
-
-	log.Println("Add a new client Context:",c)
 
 	s._client_contexts =append(s._client_contexts,c)
 

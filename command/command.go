@@ -2,7 +2,6 @@ package command
 
 import (
 	"strings"
-	"log"
 	"github.com/blackspace/goserver/client"
 	"github.com/blackspace/goserver/action"
 )
@@ -74,11 +73,7 @@ func _ExecString(clt *client.Client,l string)(string) {
 }
 
 func DoCommand(clt *client.Client , line string)  bool {
-	log.Println(`Get a line from client:`, line)
-
 	result := _ExecString(clt, line)
-
-	log.Println("The result of the command is:", result)
 
 	//When the client execute the quit command,the client has been closed,
 	//Can't write the connect and must break the for loop
