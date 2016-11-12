@@ -84,11 +84,23 @@ func (s *Server)Start(addr string,port string) {
 
 		go func() {
 			for {
-				conn,err:= s.GetListener().Accept()
-				if err != nil {
-					panic(err)
+				if s.Runnable {
+					if conn,err:= s.GetListener().Accept(); err!=nil {
+						switch e:=err.(type) {
+						case *net.OpError:
+							log.Println(e)
+							s.Runnable=false
+							return
+						default:
+							panic(e)
+						}
+					} else {
+						go s._DoWork(conn)
+					}
+				} else {
+					return
 				}
-				go s._DoWork(conn)
+
 			}
 
 		}()

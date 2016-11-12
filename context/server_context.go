@@ -8,13 +8,14 @@ import (
 )
 
 type ServerContext struct {
+	Runnable 	bool
 	_client_contexts [](*ClientContext)
 	_listener        net.Listener
 	_mutex           sync.Mutex
 }
 
 func NewServerContext() *ServerContext{
-	return &ServerContext{_client_contexts:make([](*ClientContext),0,1000)}
+	return &ServerContext{_client_contexts:make([](*ClientContext),0,1000),Runnable:true}
 }
 
 func (s *ServerContext)SetListener(l net.Listener) {
@@ -86,18 +87,22 @@ func (s *ServerContext)AddClientContext(c * ClientContext) {
 
 func (s *ServerContext)ClearClosedClient() {
 	for {
-		func (){
-			s._mutex.Lock()
-			defer s._mutex.Unlock()
+		if s.Runnable {
+			func (){
+				s._mutex.Lock()
+				defer s._mutex.Unlock()
 
-			for i,c:=range s._client_contexts {
-				if c!=nil&&c.IsClosed {
-					s._client_contexts[i]=nil
+				for i,c:=range s._client_contexts {
+					if c!=nil&&c.IsClosed {
+						s._client_contexts[i]=nil
+					}
 				}
-			}
-		}()
+			}()
 
-		time.Sleep(time.Second*3)
+			time.Sleep(time.Second*3)
+		} else {
+			break
+		}
 	}
 }
 
