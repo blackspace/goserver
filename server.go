@@ -8,12 +8,18 @@ import (
 	"github.com/blackspace/goserver/action"
 )
 
+const (
+	LINEMODE= iota
+	BINARYMODE
+)
+
 type Server struct {
 	 *context.ServerContext
+	Model int
 }
 
-func NewServer() *Server{
-	return &Server{ServerContext:context.NewServerContext()}
+func NewServer(model int) *Server{
+	return &Server{ServerContext:context.NewServerContext(),Model:model}
 }
 
 func (s *Server)_DoWork(conn net.Conn)() {
@@ -39,29 +45,33 @@ func (s *Server)_DoWork(conn net.Conn)() {
 
 			buf = append(buf, c)
 
-			if action.IsBinary(buf) {
-				fa := action.FindActionForBinary(buf)
-				if fa != nil {
-					if fa(clt, buf) {
-						break T
-					} else {
-						break S
+			switch s.Model {
+			case BINARYMODE:
+				if action.IsBinary(buf) {
+					fa := action.FindActionForBinary(buf)
+					if fa != nil {
+						if fa(clt, buf) {
+							break T
+						} else {
+							break S
+						}
 					}
 				}
-			}
-
-			if action.IsLine(buf) {
-				line := string(buf[:len(buf) - 2])
-				la := action.FindActionForLine(line)
-				if la != nil {
-					if la(clt, line) {
-						break T
+			case LINEMODE:
+				if action.IsLine(buf) {
+					line := string(buf[:len(buf) - 2])
+					la := action.FindActionForLine(line)
+					if la != nil {
+						if la(clt, line) {
+							break T
+						} else {
+							break S
+						}
 					} else {
-						break S
+						clt.SendResult("The line is invalid line\r\n")
+						break T
 					}
-				} else {
-					clt.SendResult("The line is invalid line\r\n")
-					break T
+
 				}
 			}
 		}

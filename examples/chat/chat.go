@@ -59,7 +59,7 @@ func init() {
 }
 
 func main() {
-	s:=goserver.NewServer()
+	s:=goserver.NewServer(goserver.LINEMODE)
 
 	s.Start("127.0.0.1","8058")
 	defer s.Stop()
