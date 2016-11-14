@@ -5,7 +5,6 @@ import (
 	"sync"
 	"time"
 	"github.com/blackspace/goserver/client"
-	"github.com/blackspace/goserver/context"
 	"github.com/blackspace/goserver/action"
 	"github.com/blackspace/goserver"
 )
@@ -16,7 +15,7 @@ func IsSocksV4Instruction(buf []byte) bool {
 }
 
 
-func DoSocksV4(clt client.Client , buf []byte)  bool {
+func DoSocksV4(clt *client.Client , buf []byte)  bool {
 	port := buf[2:4]
 	ip := buf[4:8]
 
