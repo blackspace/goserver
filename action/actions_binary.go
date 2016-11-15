@@ -5,10 +5,10 @@ import (
 )
 
 type BinaryActionFun func(clt * client.Client,buf []byte) (need_keep_link bool)
-type BinaryPredicateFun func([]byte)  bool
+type BinaryMatchFun func([]byte)  bool
 
 type BinaryAction struct {
-	MatchFun BinaryPredicateFun
+	MatchFun BinaryMatchFun
 	DoFun    BinaryActionFun
 }
 
@@ -24,7 +24,7 @@ func NewBinaryActions() *_BinaryActions {
 }
 
 
-func (as *_BinaryActions)AddAction(mf BinaryPredicateFun,df BinaryActionFun) {
+func (as *_BinaryActions)AddAction(mf BinaryMatchFun,df BinaryActionFun) {
 	as._data=append(as._data, BinaryAction{mf,df})
 }
 
