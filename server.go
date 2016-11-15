@@ -102,21 +102,17 @@ func (s *Server)Start(addr string,port string) {
 
 		go func() {
 			for {
-				if s.Runnable {
-					if conn,err:= s.GetListener().Accept(); err!=nil {
-						switch e:=err.(type) {
-						case *net.OpError:
-							log.Println(e)
-							s.Runnable=false
-							return
-						default:
-							panic(e)
-						}
-					} else {
-						go s._DoWork(conn)
+
+				if conn, err := s.GetListener().Accept(); err != nil {
+					switch e := err.(type) {
+					case *net.OpError:
+						log.Println(e)
+						return
+					default:
+						panic(e)
 					}
 				} else {
-					return
+					go s._DoWork(conn)
 				}
 
 			}
