@@ -103,18 +103,11 @@ func (s *Server)Start(addr string,port string) {
 		go func() {
 			for {
 
-				if conn, err := s.GetListener().Accept(); err != nil {
-					switch e := err.(type) {
-					case *net.OpError:
-						log.Println(e)
-						return
-					default:
-						panic(e)
-					}
-				} else {
+				if conn, err:= s.GetListener().Accept(); conn != nil {
 					go s._DoWork(conn)
+				} else if err!=nil {
+					break
 				}
-
 			}
 
 		}()
