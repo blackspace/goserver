@@ -12,7 +12,7 @@ func main() {
 		return "hello,I am a robot"
 	},"say hello")
 
-	s:=goserver.NewServer(goserver.LINEMODE)
+	s:=goserver.NewLineServer()
 	s.Start("127.0.0.1","5050")
 	defer s.Stop()
 

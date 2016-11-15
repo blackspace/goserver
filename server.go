@@ -6,6 +6,7 @@ import (
 	"github.com/blackspace/goserver/context"
 	"github.com/blackspace/goserver/client"
 	"github.com/blackspace/goserver/action"
+	"strconv"
 )
 
 const (
@@ -18,9 +19,14 @@ type Server struct {
 	Model int
 }
 
-func NewServer(model int) *Server{
-	return &Server{ServerContext:context.NewServerContext(),Model:model}
+func NewLineServer() *Server{
+	return &Server{ServerContext:context.NewServerContext(),Model:LINEMODE}
 }
+
+func NewBinaryServer() *Server{
+	return &Server{ServerContext:context.NewServerContext(),Model:BINARYMODE}
+}
+
 
 func (s *Server)_DoWork(conn net.Conn)() {
 	cc := context.NewClientContext(s.ServerContext,conn)
@@ -73,6 +79,8 @@ func (s *Server)_DoWork(conn net.Conn)() {
 					}
 
 				}
+			default:
+				panic("There isn't the mode of"+strconv.Itoa(s.Model))
 			}
 		}
 	}
