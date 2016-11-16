@@ -5,10 +5,10 @@ import (
 )
 
 type LineActionFun func(clt *client.Client,line string) (need_keep_link bool)
-type LinePredicateFun func(string)  bool
+type LineMatchFun func(string)  bool
 
 type LineAction struct {
-	MatchFun LinePredicateFun
+	MatchFun LineMatchFun
 	DoFun    LineActionFun
 }
 
@@ -22,7 +22,7 @@ func _NewLineActions() *_LineActions {
 	return &_LineActions{_data:make([]LineAction,0,1<<8)}
 }
 
-func (as *_LineActions)AddAction(mf LinePredicateFun,df LineActionFun) {
+func (as *_LineActions)AddAction(mf LineMatchFun,df LineActionFun) {
 	as._data=append(as._data,LineAction{mf,df})
 }
 
